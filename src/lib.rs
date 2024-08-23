@@ -32,7 +32,7 @@ impl Handler for AppError {
 }
 
 #[handler]
-async fn helloworld(conn: &mut Conn) -> Result<(), AppError> {
+async fn helloworld(conn: mut Conn) -> Result<(), AppError> {
     conn.set_status(200);
     conn.set_body("hello world");
     // Ok(())
@@ -82,7 +82,7 @@ pub fn handler(_args: TokenStream, input: TokenStream) -> TokenStream {
                 #[trillium::async_trait]
                 impl trillium::Handler for #name {
                     async fn run(&self, mut conn: trillium::Conn) -> trillium::Conn {
-                        match Self::#name(&mut conn).await {
+                        match Self::#name(mut conn).await {
                             Ok(_) => conn,
                             Err(e) => e.run(conn).await
                         }
